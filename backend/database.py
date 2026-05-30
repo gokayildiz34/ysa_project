@@ -1,10 +1,4 @@
-# =============================================================================
-# YAZAN : Atahan Birinci (1201602810) — SQLite Veritabanı & Veri Kayıt Sistemi
-# GÖREV : Analiz sonuçlarını SQLite'a kaydetmek ve geçmişten okumak
-# PROJE : NetAnomAI — Autoencoder Tabanlı Ağ Trafiği Anomali Tespiti
-# DERS  : Yapay Sinir Ağları — Trakya Üniversitesi Bilgisayar Mühendisliği
-# REPO  : https://github.com/gokayildiz34/ysa_project
-# =============================================================================
+
 
 import sqlite3
 from pathlib import Path

@@ -1,11 +1,4 @@
-# =============================================================================
-# YAZAN : Ufuk Soydan  (1221602085) — FastAPI Backend & API Geliştirme
-# YAZAN : Gökay Yıldız (1221602087) — Backend Geliştirme & Model Entegrasyonu
-# GÖREV : FastAPI uygulama — tüm HTTP endpoint'leri, dosya servisi, analiz akışı
-# PROJE : NetAnomAI — Autoencoder Tabanlı Ağ Trafiği Anomali Tespiti
-# DERS  : Yapay Sinir Ağları — Trakya Üniversitesi Bilgisayar Mühendisliği
-# REPO  : https://github.com/gokayildiz34/ysa_project
-# =============================================================================
+
 import json
 import os
 import shutil
