@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Data & artifacts
+data/
+models/
+outputs/
+*.sqlite3
+*.pcap
+*.pcapng
+
+# ML artifacts
+*.pkl
+*.keras
+
+# OS/IDE
+.DS_Store
