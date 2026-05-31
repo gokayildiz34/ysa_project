@@ -1,0 +1,38 @@
+{
+    "model_name": "PCA Reconstruction",
+    "model_type": "pca",
+    "accuracy": 0.9888434362216437,
+    "precision": 0.9830011723329426,
+    "recall": 0.9994040524433849,
+    "f1_score": 0.9911347517730497,
+    "roc_auc": 0.9974918329837814,
+    "threshold": 0.0016814817408814485,
+    "score_type": "reconstruction_error",
+    "n_components": 8,
+    "explained_variance": 0.9539326805334425,
+    "confusion_matrix": [
+        [
+            982,
+            29
+        ],
+        [
+            1,
+            1677
+        ]
+    ],
+    "test_rows": 2689,
+    "normal_rows": 1011,
+    "anomaly_rows": 1678,
+    "config": {
+        "model_type": "pca",
+        "n_components_requested": 0.95,
+        "n_components_fitted": 8,
+        "explained_variance": 0.9539326805334425,
+        "threshold_percentile": 95.0,
+        "threshold": 0.0016814817408814485,
+        "train_rows": 4343,
+        "val_rows": 1056,
+        "val_anomaly_rate": 0.050189393939393936
+    },
+    "classification_report": "              precision    recall  f1-score   support\n\n      Normal       1.00      0.97      0.98      1011\n     Anomaly       0.98      1.00      0.99      1678\n\n    accuracy                           0.99      2689\n   macro avg       0.99      0.99      0.99      2689\nweighted avg       0.99      0.99      0.99      2689\n"
+}

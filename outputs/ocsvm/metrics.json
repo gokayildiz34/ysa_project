@@ -1,0 +1,37 @@
+{
+    "model_name": "One-Class SVM",
+    "model_type": "ocsvm",
+    "accuracy": 0.9107474897731499,
+    "precision": 0.9608974358974359,
+    "recall": 0.8933253873659118,
+    "f1_score": 0.9258801729462631,
+    "roc_auc": 0.9787775471010776,
+    "threshold": 2.6209429754218565,
+    "score_type": "decision_function",
+    "confusion_matrix": [
+        [
+            950,
+            61
+        ],
+        [
+            179,
+            1499
+        ]
+    ],
+    "test_rows": 2689,
+    "normal_rows": 1011,
+    "anomaly_rows": 1678,
+    "config": {
+        "model_type": "ocsvm",
+        "kernel": "rbf",
+        "nu": 0.05,
+        "gamma": "scale",
+        "threshold_percentile": 95.0,
+        "threshold": 2.6209429754218565,
+        "train_rows_used": 4343,
+        "train_rows_total": 4343,
+        "val_rows": 1056,
+        "val_anomaly_rate": 0.050189393939393936
+    },
+    "classification_report": "              precision    recall  f1-score   support\n\n      Normal       0.84      0.94      0.89      1011\n     Anomaly       0.96      0.89      0.93      1678\n\n    accuracy                           0.91      2689\n   macro avg       0.90      0.92      0.91      2689\nweighted avg       0.92      0.91      0.91      2689\n"
+}

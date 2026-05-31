@@ -1,0 +1,12 @@
+{
+    "model_type": "ocsvm",
+    "kernel": "rbf",
+    "nu": 0.05,
+    "gamma": "scale",
+    "threshold_percentile": 95.0,
+    "threshold": 2.6209429754218565,
+    "train_rows_used": 4343,
+    "train_rows_total": 4343,
+    "val_rows": 1056,
+    "val_anomaly_rate": 0.050189393939393936
+}

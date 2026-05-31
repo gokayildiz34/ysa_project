@@ -1,0 +1,35 @@
+{
+    "model_name": "Isolation Forest",
+    "model_type": "isolation_forest",
+    "accuracy": 0.6251394570472295,
+    "precision": 0.9652777777777778,
+    "recall": 0.41418355184743744,
+    "f1_score": 0.5796497080900751,
+    "roc_auc": 0.9250609210484433,
+    "threshold": 0.014858107821131464,
+    "score_type": "decision_function",
+    "confusion_matrix": [
+        [
+            986,
+            25
+        ],
+        [
+            983,
+            695
+        ]
+    ],
+    "test_rows": 2689,
+    "normal_rows": 1011,
+    "anomaly_rows": 1678,
+    "config": {
+        "model_type": "isolation_forest",
+        "n_estimators": 200,
+        "contamination": 0.05,
+        "threshold_percentile": 95.0,
+        "threshold": 0.014858107821131464,
+        "train_rows": 4343,
+        "val_rows": 1056,
+        "val_anomaly_rate": 0.050189393939393936
+    },
+    "classification_report": "              precision    recall  f1-score   support\n\n      Normal       0.50      0.98      0.66      1011\n     Anomaly       0.97      0.41      0.58      1678\n\n    accuracy                           0.63      2689\n   macro avg       0.73      0.69      0.62      2689\nweighted avg       0.79      0.63      0.61      2689\n"
+}

@@ -1,0 +1,11 @@
+{
+    "model_type": "pca",
+    "n_components_requested": 0.95,
+    "n_components_fitted": 8,
+    "explained_variance": 0.9539326805334425,
+    "threshold_percentile": 95.0,
+    "threshold": 0.0016814817408814485,
+    "train_rows": 4343,
+    "val_rows": 1056,
+    "val_anomaly_rate": 0.050189393939393936
+}

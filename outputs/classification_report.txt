@@ -1,0 +1,47 @@
+NetAnomAI Siniflandirma Raporu
+========================================
+
+En Iyi Konfigurasyon:
+{
+    "trial": 2,
+    "config": {
+        "hidden_layers": [
+            128,
+            64,
+            32
+        ],
+        "bottleneck_dim": 16,
+        "dropout_rate": 0.1,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "scaler": "minmax"
+    },
+    "best_val_loss": 0.000732826825696975,
+    "final_train_loss": 0.0016716562677174807,
+    "threshold_percentile": 95.0,
+    "threshold": 0.0017544852751214784,
+    "train_rows": 4343,
+    "validation_rows": 1056,
+    "feature_count": 38
+}
+
+              precision    recall  f1-score   support
+
+      Normal       1.00      0.95      0.97      1011
+     Anomali       0.97      1.00      0.98      1678
+
+    accuracy                           0.98      2689
+   macro avg       0.98      0.97      0.98      2689
+weighted avg       0.98      0.98      0.98      2689
+
+
+Karmasiklik Matrisi:
+[[ 956   55]
+ [   0 1678]]
+
+Dogruluk: 0.9795462997396802
+Kesinlik: 0.9682631275245239
+Duyarlilik: 1.0
+F1-skoru: 0.9838756962767516
+ROC-AUC: 0.9962150551325173
+Esik Degeri: 0.0017544852751214784

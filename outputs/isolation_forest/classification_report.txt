@@ -1,0 +1,34 @@
+Isolation Forest Classification Report
+==================================================
+
+Config:
+{
+    "model_type": "isolation_forest",
+    "n_estimators": 200,
+    "contamination": 0.05,
+    "threshold_percentile": 95.0,
+    "threshold": 0.014858107821131464,
+    "train_rows": 4343,
+    "val_rows": 1056,
+    "val_anomaly_rate": 0.050189393939393936
+}
+
+              precision    recall  f1-score   support
+
+      Normal       0.50      0.98      0.66      1011
+     Anomaly       0.97      0.41      0.58      1678
+
+    accuracy                           0.63      2689
+   macro avg       0.73      0.69      0.62      2689
+weighted avg       0.79      0.63      0.61      2689
+
+Confusion Matrix:
+[[986  25]
+ [983 695]]
+
+Accuracy  : 0.6251394570
+Precision : 0.9652777778
+Recall    : 0.4141835518
+F1-Score  : 0.5796497081
+ROC-AUC   : 0.9250609210
+Threshold : 0.0148581078

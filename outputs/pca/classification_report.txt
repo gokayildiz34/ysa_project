@@ -1,0 +1,38 @@
+PCA Reconstruction Classification Report
+==================================================
+
+n_components     : 8
+Explained Var.   : 95.39%
+
+Config:
+{
+    "model_type": "pca",
+    "n_components_requested": 0.95,
+    "n_components_fitted": 8,
+    "explained_variance": 0.9539326805334425,
+    "threshold_percentile": 95.0,
+    "threshold": 0.0016814817408814485,
+    "train_rows": 4343,
+    "val_rows": 1056,
+    "val_anomaly_rate": 0.050189393939393936
+}
+
+              precision    recall  f1-score   support
+
+      Normal       1.00      0.97      0.98      1011
+     Anomaly       0.98      1.00      0.99      1678
+
+    accuracy                           0.99      2689
+   macro avg       0.99      0.99      0.99      2689
+weighted avg       0.99      0.99      0.99      2689
+
+Confusion Matrix:
+[[ 982   29]
+ [   1 1677]]
+
+Accuracy  : 0.9888434362
+Precision : 0.9830011723
+Recall    : 0.9994040524
+F1-Score  : 0.9911347518
+ROC-AUC   : 0.9974918330
+Threshold : 0.0016814817

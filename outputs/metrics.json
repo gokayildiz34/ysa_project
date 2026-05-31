@@ -1,0 +1,40 @@
+{
+    "accuracy": 0.9795462997396802,
+    "precision": 0.9682631275245239,
+    "recall": 1.0,
+    "f1_score": 0.9838756962767516,
+    "roc_auc": 0.9962150551325173,
+    "threshold": 0.0017544852751214784,
+    "confusion_matrix": [
+        [
+            956,
+            55
+        ],
+        [
+            0,
+            1678
+        ]
+    ],
+    "best_config": {
+        "trial": 2,
+        "config": {
+            "hidden_layers": [
+                128,
+                64,
+                32
+            ],
+            "bottleneck_dim": 16,
+            "dropout_rate": 0.1,
+            "learning_rate": 0.001,
+            "batch_size": 32,
+            "scaler": "minmax"
+        },
+        "best_val_loss": 0.000732826825696975,
+        "final_train_loss": 0.0016716562677174807,
+        "threshold_percentile": 95.0,
+        "threshold": 0.0017544852751214784,
+        "train_rows": 4343,
+        "validation_rows": 1056,
+        "feature_count": 38
+    }
+}

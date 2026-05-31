@@ -1,0 +1,36 @@
+One-Class SVM Classification Report
+==================================================
+
+Config:
+{
+    "model_type": "ocsvm",
+    "kernel": "rbf",
+    "nu": 0.05,
+    "gamma": "scale",
+    "threshold_percentile": 95.0,
+    "threshold": 2.6209429754218565,
+    "train_rows_used": 4343,
+    "train_rows_total": 4343,
+    "val_rows": 1056,
+    "val_anomaly_rate": 0.050189393939393936
+}
+
+              precision    recall  f1-score   support
+
+      Normal       0.84      0.94      0.89      1011
+     Anomaly       0.96      0.89      0.93      1678
+
+    accuracy                           0.91      2689
+   macro avg       0.90      0.92      0.91      2689
+weighted avg       0.92      0.91      0.91      2689
+
+Confusion Matrix:
+[[ 950   61]
+ [ 179 1499]]
+
+Accuracy  : 0.9107474898
+Precision : 0.9608974359
+Recall    : 0.8933253874
+F1-Score  : 0.9258801729
+ROC-AUC   : 0.9787775471
+Threshold : 2.6209429754
