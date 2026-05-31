@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NetAnomAI — Ağ Anomali Tespiti</title>
+    <meta name="description" content="Çok modelli ağ anomali tespiti: Autoencoder, Isolation Forest, One-Class SVM, PCA Yeniden Yapılandırma." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+          <div class="brand">
+            <div class="brand-mark">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-name">NetAnomAI</span>
+              <span class="brand-sub">Anomali Tespiti</span>
+            </div>
+          </div>
+
+          <nav class="nav" id="mainNav">
+            <a href="#" class="nav-item active" data-section="analyze" id="navAnalyze">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Analiz Et</span>
+            </a>
+            <a href="#" class="nav-item" data-section="realistic" id="navRealistic">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+              <span>Gerçekçi Test</span>
+            </a>
+            <a href="#" class="nav-item" data-section="history" id="navHistory">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Geçmiş</span>
+            </a>
+            <a href="#" class="nav-item" data-section="model" id="navModel">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>Model Bilgisi</span>
+            </a>
+            <a href="#" class="nav-item" data-section="compare" id="navCompare">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              <span>Model Karşılaştırma</span>
+            </a>
+
+            <div class="nav-section-label">Model Detayları</div>
+
+            <a href="#" class="nav-item" data-section="isolation-forest" id="navIF">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M12 12V2"/><path d="M12 2C8 6 8 10 12 12"/><path d="M12 2c4 4 4 8 0 10"/></svg>
+              <span>Isolation Forest</span>
+            </a>
+            <a href="#" class="nav-item" data-section="ocsvm" id="navOCSVM">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/></svg>
+              <span>One-Class SVM</span>
+            </a>
+            <a href="#" class="nav-item" data-section="pca" id="navPCA">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+              <span>PCA Yeniden Yapılandırma</span>
+            </a>
+          </nav>
+
+          <div class="sidebar-footer">
+            <div id="apiStatus" class="api-status">
+              <span class="api-dot"></span>
+              <span class="api-label">Bağlanıyor...</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="content">
+        <header class="topbar">
+          <div class="topbar-left">
+            <p class="eyebrow">Çok Modelli Ağ Anomali Tespiti</p>
+            <h2 id="topbarTitle">Trafik Analiz Konsolu</h2>
+          </div>
+          <div class="topbar-right">
+            <div class="topbar-time" id="currentTime"></div>
+          </div>
+        </header>
+
+        <!-- SECTION: ANALYZE -->
+        <section class="page-section" id="section-analyze">
+          <div class="section-header">
+            <div>
+              <h3>PCAP Yükleme Analizi</h3>
+              <p>Bir tespit modeli seçin, ardından analiz için <code>.pcap</code> veya <code>.pcapng</code> dosyası yükleyin.</p>
+            </div>
+          </div>
+
+          <!-- STEP 1: MODEL SELECTION -->
+          <div class="wizard-step" id="step1">
+            <div class="step-label"><span class="step-num">1</span>Tespit Modeli Seçin</div>
+            <div class="model-cards" id="modelCards">
+
+              <div class="model-option" data-model="autoencoder" tabindex="0">
+                <div class="model-option-icon" style="background:linear-gradient(135deg,#00d4aa22,#00d4aa11);border-color:rgba(0,212,170,0.3)">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="model-option-body">
+                  <div class="model-option-name">Autoencoder</div>
+                  <div class="model-option-desc">Derin öğrenme yeniden yapılandırma — sinirsel sıkıştırma ile normal trafik örüntülerini öğrenir</div>
+                  <div class="model-option-tags"><span class="mtag mtag-green">Derin Öğrenme</span><span class="mtag">Yüksek Doğruluk</span></div>
+                </div>
+                <div class="model-option-check">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+
+              <div class="model-option" data-model="isolation_forest" tabindex="0">
+                <div class="model-option-icon" style="background:linear-gradient(135deg,#a78bfa22,#a78bfa11);border-color:rgba(167,139,250,0.3)">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M12 22V12"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M12 12V2"/><path d="M12 2C8 6 8 10 12 12"/><path d="M12 2c4 4 4 8 0 10"/></svg>
+                </div>
+                <div class="model-option-body">
+                  <div class="model-option-name">Isolation Forest</div>
+                  <div class="model-option-desc">Ağaç tabanlı anomali izolasyonu — hızlı, ölçeklenebilir, yüksek boyutlu verilerde etkili</div>
+                  <div class="model-option-tags"><span class="mtag mtag-purple">Topluluk</span><span class="mtag">Hızlı ⚡</span></div>
+                </div>
+                <div class="model-option-check">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+
+              <div class="model-option" data-model="ocsvm" tabindex="0">
+                <div class="model-option-icon" style="background:linear-gradient(135deg,#fb923c22,#fb923c11);border-color:rgba(251,146,60,0.3)">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/></svg>
+                </div>
+                <div class="model-option-body">
+                  <div class="model-option-name">One-Class SVM</div>
+                  <div class="model-option-desc">Destek vektör sınırı — normal veriyi hiper küreye eşler, aykırıları işaretler</div>
+                  <div class="model-option-tags"><span class="mtag mtag-orange">SVM</span><span class="mtag">Güçlü Sınır</span></div>
+                </div>
+                <div class="model-option-check">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+
+              <div class="model-option" data-model="pca" tabindex="0">
+                <div class="model-option-icon" style="background:linear-gradient(135deg,#38bdf822,#38bdf811);border-color:rgba(56,189,248,0.3)">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+                </div>
+                <div class="model-option-body">
+                  <div class="model-option-name">PCA Reconstruction</div>
+                  <div class="model-option-desc">Doğrusal boyut indirgeme — yüksek yeniden yapılandırma hatası anomali sinyali verir</div>
+                  <div class="model-option-tags"><span class="mtag mtag-blue">Doğrusal</span><span class="mtag">Yorumlanabilir</span></div>
+                </div>
+                <div class="model-option-check">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+
+            </div><!-- /model-cards -->
+
+            <!-- Selected model banner -->
+            <div class="selected-model-banner hidden" id="selectedModelBanner">
+              <div class="smb-left">
+                <span class="smb-icon" id="smbIcon"></span>
+                <div>
+                  <div class="smb-name" id="smbName">-</div>
+                  <div class="smb-desc" id="smbDesc">-</div>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="changeModelBtn">Modeli Değiştir</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: FILE + PARAMS -->
+          <div class="wizard-step wizard-step-locked" id="step2">
+            <div class="step-label"><span class="step-num">2</span>Yükle &amp; Yapılandır</div>
+
+            <div class="upload-area" id="uploadDropZone">
+              <div class="upload-icon">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <p class="upload-title">PCAP dosyanızı buraya bırakın</p>
+              <p class="upload-sub">veya tıklayarak seçin</p>
+              <input id="pcapFile" type="file" accept=".pcap,.pcapng" class="upload-file-input" />
+              <div id="uploadFileName" class="upload-filename hidden"></div>
+            </div>
+
+            <form id="uploadForm" class="upload-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="ratioInput">Anomali Oran Eşiği</label>
+                  <input id="ratioInput" type="number" min="0" max="1" step="0.01" value="0.10" />
+                  <span class="input-hint">0.0 – 1.0 (varsayılan: 0.10)</span>
+                </div>
+                <div class="form-group">
+                  <label for="windowSizeInput">Pencere Boyutu (saniye)</label>
+                  <input id="windowSizeInput" type="number" min="0.1" max="60" step="0.1" value="1.0" />
+                  <span class="input-hint">Analiz dilimi başına zaman penceresi</span>
+                </div>
+                <div class="form-group form-group-submit">
+                  <button type="submit" id="uploadBtn" class="btn btn-primary" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Analizi Başlat
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- RESULT PANEL -->
+          <div id="resultPanel" class="result-panel hidden">
+            <div class="result-panel-header">
+              <div class="result-info">
+                <div id="resultBadge" class="result-badge">-</div>
+                <div>
+                  <p id="resultTitle" class="result-title">-</p>
+                  <p id="resultSubtitle" class="result-subtitle">-</p>
+                </div>
+              </div>
+              <div class="result-header-right">
+                <span class="result-model-tag" id="resultModelTag"></span>
+                <button class="btn btn-ghost btn-sm" id="closeResult">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  Kapat
+                </button>
+              </div>
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric-card"><span class="metric-label">Toplam Pencere</span><strong id="totalWindows" class="metric-value">-</strong></div>
+              <div class="metric-card"><span class="metric-label">Anomali Penceresi</span><strong id="anomalyWindows" class="metric-value anomaly-color">-</strong></div>
+              <div class="metric-card"><span class="metric-label">Anomali Oranı</span><strong id="anomalyRatio" class="metric-value">-</strong></div>
+              <div class="metric-card"><span class="metric-label">Ort. Skor</span><strong id="avgError" class="metric-value">-</strong></div>
+              <div class="metric-card"><span class="metric-label">Maks. Skor</span><strong id="maxError" class="metric-value">-</strong></div>
+              <div class="metric-card"><span class="metric-label">Eşik Değeri</span><strong id="thresholdValue" class="metric-value">-</strong></div>
+            </div>
+
+            <div class="chart-container">
+              <div class="chart-header">
+                <span class="chart-title">Pencere Başına Anomali Skoru</span>
+                <div class="chart-legend">
+                  <span class="legend-item"><span class="legend-dot normal-dot"></span>Normal</span>
+                  <span class="legend-item"><span class="legend-dot anomaly-dot"></span>Anomali</span>
+                  <span class="legend-item"><span class="legend-line threshold-line"></span>Eşik</span>
+                </div>
+              </div>
+              <canvas id="errorChart"></canvas>
+            </div>
+
+            <div class="result-details">
+              <div class="detail-card">
+                <h4><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Anomali Aralıkları</h4>
+                <div id="rangeList" class="detail-list"></div>
+              </div>
+              <div class="detail-card">
+                <h4><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> En Yüksek Skorlu Pencereler</h4>
+                <div id="topWindowList" class="detail-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: REALISTIC TEST -->
+        <section class="page-section hidden" id="section-realistic">
+          <div class="section-header">
+            <div>
+              <h3>Gerçekçi Test Dosyaları</h3>
+              <p><code>data/raw/realistic_test</code> klasöründeki hazır yakalamalar üzerinde analiz yapın.</p>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center">
+              <div class="mini-model-select">
+                <label for="realisticModelSelect">Model:</label>
+                <select id="realisticModelSelect" class="select-input">
+                  <option value="autoencoder">Autoencoder</option>
+                  <option value="isolation_forest">Isolation Forest</option>
+                  <option value="ocsvm">One-Class SVM</option>
+                  <option value="pca">PCA Yeniden Yapılandırma</option>
+                </select>
+              </div>
+              <button id="refreshRealistic" class="btn btn-secondary btn-sm">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Yenile
+              </button>
+            </div>
+          </div>
+          <div id="realisticFiles" class="file-grid"></div>
+        </section>
+
+        <!-- SECTION: HISTORY -->
+        <section class="page-section hidden" id="section-history">
+          <div class="section-header">
+            <div>
+              <h3>Analiz Geçmişi</h3>
+              <p>SQLite veritabanındaki tüm kayıtlı analizler.</p>
+            </div>
+            <button id="refreshHistory" class="btn btn-secondary btn-sm">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Yenile
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table id="historyTable">
+              <thead>
+                <tr>
+                  <th>ID</th><th>Dosya</th><th>Model</th><th>Kaynak</th><th>Sonuç</th><th>Oran</th><th>Pencere</th><th>Tarih</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- SECTION: MODEL INFO -->
+        <section class="page-section hidden" id="section-model">
+          <div class="section-header">
+            <div>
+              <h3>🧠 Autoencoder — Model Bilgisi</h3>
+              <p>Derin öğrenme yeniden yapılandırma modeli yapılandırması, eğitim detayları ve değerlendirme metrikleri.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="refreshModel">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Yenile
+            </button>
+          </div>
+          <div id="modelInfo" class="model-info-grid"></div>
+        </section>
+
+        <!-- SECTION: COMPARE -->
+        <section class="page-section hidden" id="section-compare">
+          <div class="section-header">
+            <div>
+              <h3>Model Karşılaştırma</h3>
+              <p>Tüm eğitilmiş tespit modellerinin yan yana performans metrikleri.</p>
+            </div>
+          </div>
+          <div class="compare-grid" id="compareGrid">
+            <div class="compare-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.3"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+              <p>4 modeli eğitin, ardından karşılaştırma verilerini doldurmak için <code>04b_evaluate_all_models.py</code> scriptini çalıştırın.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: ISOLATION FOREST -->
+        <section class="page-section hidden" id="section-isolation-forest">
+          <div class="section-header">
+            <div>
+              <h3><span style="color:#a78bfa">🌲 Isolation Forest</span> — Değerlendirme Raporu</h3>
+              <p>Ağaç tabanlı anomali izolasyon modeli — test seti performans metrikleri ve görselleştirmeler.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="refreshIF">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Yenile
+            </button>
+          </div>
+          <div id="ifReport" class="model-report-grid"></div>
+        </section>
+
+        <!-- SECTION: OC-SVM -->
+        <section class="page-section hidden" id="section-ocsvm">
+          <div class="section-header">
+            <div>
+              <h3><span style="color:#fb923c">🔵 One-Class SVM</span> — Değerlendirme Raporu</h3>
+              <p>Destek vektör sınır modeli — test seti performans metrikleri ve görselleştirmeler.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="refreshOCSVM">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Yenile
+            </button>
+          </div>
+          <div id="ocsvmReport" class="model-report-grid"></div>
+        </section>
+
+        <!-- SECTION: PCA -->
+        <section class="page-section hidden" id="section-pca">
+          <div class="section-header">
+            <div>
+              <h3><span style="color:#38bdf8">📊 PCA Yeniden Yapılandırma</span> — Değerlendirme Raporu</h3>
+              <p>Doğrusal boyut indirgeme modeli — test seti performans metrikleri ve görselleştirmeler.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="refreshPCA">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Yenile
+            </button>
+          </div>
+          <div id="pcaReport" class="model-report-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+      <div class="loading-content">
+        <div class="loading-ring">
+          <div></div><div></div><div></div><div></div>
+        </div>
+        <p id="loadingText">Trafik analiz ediliyor...</p>
+        <p class="loading-sub" id="loadingModel"></p>
+      </div>
+    </div>
+
+    <script src="assets/app.js"></script>
+  </body>
+</html>
