@@ -859,7 +859,18 @@ window.addEventListener('resize', function() {
   }
 });
 
-/* ── INIT ────────────────────────────────── */
+var themeBtn = document.getElementById('themeToggleBtn');
+if (themeBtn) {
+  var t = localStorage.getItem('theme') || 'dark';
+  if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  themeBtn.addEventListener('click', function() {
+    var nt = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if (nt === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('theme', nt);
+  });
+}
+
 checkApi();
 loadRealisticFiles();
 loadHistory();
