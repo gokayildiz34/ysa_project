@@ -1,9 +1,11 @@
+
 import os
 
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+# Dizin yollarını burada tanımlıyoruz
 PROCESSED_DIR = "data/processed"
 SPLIT_DIR = "data/splits"
 
@@ -13,6 +15,7 @@ TEST_DIR = os.path.join(SPLIT_DIR, "test")
 
 FEATURES_CSV = os.path.join(PROCESSED_DIR, "features.csv")
 
+# Çıktı dosyaları
 TRAIN_CSV = os.path.join(TRAIN_DIR, "train_normal.csv")
 VAL_CSV = os.path.join(VAL_DIR, "validation_normal.csv")
 TEST_NORMAL_CSV = os.path.join(TEST_DIR, "test_normal.csv")
@@ -21,10 +24,12 @@ TEST_ALL_CSV = os.path.join(TEST_DIR, "test_all.csv")
 
 SPLIT_SUMMARY_CSV = os.path.join(SPLIT_DIR, "split_summary.csv")
 
+# Tekrarlanabilirlik için rastgele tohum değeri
 RANDOM_STATE = 42
 
 
 def save_split_summary(train_normal, validation_normal, test_normal, anomaly_df):
+    # Her bölümdeki dosya başına kaç satır düştüğünü özetleyen tablo oluşturuyoruz
     summaries = []
 
     for split_name, label_type, split_df in [
@@ -51,11 +56,14 @@ def save_split_summary(train_normal, validation_normal, test_normal, anomaly_df)
 
 
 def split_normal_by_file(normal_df):
+    # Veri sızmasını önlemek için bölmeyi satır değil DOSYA bazlı yapıyoruz
+    # Aynı pcap'ten gelen pencereler her zaman aynı bölümde kalır
     normal_files = sorted(normal_df["file_name"].unique())
 
     if len(normal_files) < 3:
         raise ValueError("Dosya bazli train/validation/test ayrimi icin en az 3 normal pcap dosyasi gerekli.")
 
+    # Önce %70 train, %30 geçici havuz
     train_files, temp_files = train_test_split(
         normal_files,
         test_size=0.30,
@@ -63,6 +71,7 @@ def split_normal_by_file(normal_df):
         shuffle=True,
     )
 
+    # Geçici havuzu yarı yarıya validation ve test olarak bölüyoruz
     validation_files, test_files = train_test_split(
         temp_files,
         test_size=0.50,
@@ -78,6 +87,7 @@ def split_normal_by_file(normal_df):
 
 
 def main():
+    # Gerekli klasörleri oluşturuyoruz
     os.makedirs(PROCESSED_DIR, exist_ok=True)
     os.makedirs(TRAIN_DIR, exist_ok=True)
     os.makedirs(VAL_DIR, exist_ok=True)
@@ -89,11 +99,13 @@ def main():
 
     df = pd.read_csv(FEATURES_CSV)
 
+    # Sonsuz ve eksik değerleri temizliyoruz, boş pencereleri de atıyoruz
     df = df.replace([np.inf, -np.inf], np.nan)
     df = df.dropna()
     df = df[df["packet_count"] > 0]
     df = df[df["byte_count"] > 0]
 
+    # Normal ve anomali verilerini ayırıyoruz
     normal_df = df[df["label"] == 0].copy()
     anomaly_df = df[df["label"] == 1].copy()
 
@@ -110,8 +122,10 @@ def main():
         print(f"[HATA] {e}")
         return
 
+    # Test setini normal + anomali birleştirerek oluşturuyoruz
     test_all = pd.concat([test_normal, anomaly_df], ignore_index=True)
 
+    # Bölünmüş veriyi CSV'ye kaydediyoruz
     train_normal.to_csv(TRAIN_CSV, index=False)
     validation_normal.to_csv(VAL_CSV, index=False)
     test_normal.to_csv(TEST_NORMAL_CSV, index=False)

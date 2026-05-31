@@ -1,3 +1,5 @@
+
+
 import json
 import os
 
@@ -18,6 +20,7 @@ from sklearn.metrics import (
     roc_curve,
 )
 
+# ── Yollar ──────────────────────────────────────────────────────────────────
 SPLIT_DIR  = "data/splits"
 MODEL_DIR  = "models"
 OUTPUT_DIR = os.path.join("outputs", "pca")
@@ -90,6 +93,7 @@ def plot_confusion_matrix(cm, out_dir):
 
 
 def plot_reconstruction_error_histogram(errors, threshold, y_true, out_dir):
+    """Reconstruction error histogrami."""
     fig, ax = plt.subplots(figsize=(8, 4))
     fig.patch.set_facecolor("#0f172a")
     ax.set_facecolor("#1e293b")
@@ -138,6 +142,7 @@ def plot_roc_curve(y_true, errors, roc_auc, out_dir):
 
 
 def plot_explained_variance(model, out_dir):
+    """PCA aciklanan varyans grafigi."""
     ratios = model.explained_variance_ratio_
     cumulative = np.cumsum(ratios)
     n = len(ratios)
@@ -188,11 +193,13 @@ def main():
     print(f"[INFO] n_components: {model.n_components_}")
     print(f"[INFO] Explained variance: {model.explained_variance_ratio_.sum()*100:.1f}%")
 
+    # Reconstruction error
     X_reduced = model.transform(X_test)
     X_recon   = model.inverse_transform(X_reduced)
     errors    = np.mean(np.square(X_test - X_recon), axis=1)
     y_pred    = (errors > threshold).astype(int)
 
+    # Metrikler
     cm   = confusion_matrix(y_true, y_pred, labels=[0, 1])
     acc  = float(accuracy_score(y_true, y_pred))
     prec = float(precision_score(y_true, y_pred, zero_division=0))
@@ -210,11 +217,13 @@ def main():
     print(f"[PCA] ROC-AUC   : {roc:.4f}" if roc else "[PCA] ROC-AUC   : N/A")
     print(f"[PCA] Threshold : {threshold:.8f}")
 
+    # Config yukle
     config = {}
     if os.path.exists(CONFIG_PATH):
         with open(CONFIG_PATH, encoding="utf-8") as f:
             config = json.load(f)
 
+    # metrics.json
     metrics = {
         "model_name":        MODEL_NAME,
         "model_type":        "pca",
@@ -243,6 +252,7 @@ def main():
         json.dump(metrics, f, indent=4)
     print(f"[KAYIT] {metrics_path}")
 
+    # classification_report.txt
     report_path = os.path.join(OUTPUT_DIR, "classification_report.txt")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(f"{MODEL_NAME} Classification Report\n")
@@ -265,6 +275,7 @@ def main():
         f.write(f"Threshold : {threshold:.10f}\n")
     print(f"[KAYIT] {report_path}")
 
+    # Gorseller
     plot_confusion_matrix(cm, OUTPUT_DIR)
     plot_reconstruction_error_histogram(errors, threshold, y_true, OUTPUT_DIR)
     if roc is not None:

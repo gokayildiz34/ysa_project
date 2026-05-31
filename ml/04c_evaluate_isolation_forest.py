@@ -1,3 +1,5 @@
+
+
 import json
 import os
 
@@ -18,6 +20,7 @@ from sklearn.metrics import (
     roc_curve,
 )
 
+# ── Yollar ──────────────────────────────────────────────────────────────────
 SPLIT_DIR  = "data/splits"
 MODEL_DIR  = "models"
 OUTPUT_DIR = os.path.join("outputs", "isolation_forest")
@@ -90,6 +93,7 @@ def plot_confusion_matrix(cm, out_dir):
 
 
 def plot_score_histogram(scores, threshold, y_true, out_dir):
+    """Decision function skorlarinin histogrami."""
     fig, ax = plt.subplots(figsize=(8, 4))
     fig.patch.set_facecolor("#0f172a")
     ax.set_facecolor("#1e293b")
@@ -152,10 +156,12 @@ def main():
     print(f"[INFO] Normal   : {(y_true==0).sum()}")
     print(f"[INFO] Anomaly  : {(y_true==1).sum()}")
 
-    scores    = model.decision_function(X_test)
-    roc_scores = -scores
+    # Skorlar
+    scores    = model.decision_function(X_test)   # yuksek = normal
+    roc_scores = -scores                           # yuksek = anomali (ROC icin)
     y_pred    = (scores < threshold).astype(int)
 
+    # Metrikler
     cm   = confusion_matrix(y_true, y_pred, labels=[0, 1])
     acc  = float(accuracy_score(y_true, y_pred))
     prec = float(precision_score(y_true, y_pred, zero_division=0))
@@ -173,11 +179,13 @@ def main():
     print(f"[IF] ROC-AUC   : {roc:.4f}" if roc else "[IF] ROC-AUC   : N/A")
     print(f"[IF] Threshold : {threshold:.6f}")
 
+    # Config yukle
     config = {}
     if os.path.exists(CONFIG_PATH):
         with open(CONFIG_PATH, encoding="utf-8") as f:
             config = json.load(f)
 
+    # metrics.json
     metrics = {
         "model_name":      MODEL_NAME,
         "model_type":      "isolation_forest",
@@ -204,6 +212,7 @@ def main():
         json.dump(metrics, f, indent=4)
     print(f"[KAYIT] {metrics_path}")
 
+    # classification_report.txt
     report_path = os.path.join(OUTPUT_DIR, "classification_report.txt")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(f"{MODEL_NAME} Classification Report\n")
@@ -224,6 +233,7 @@ def main():
         f.write(f"Threshold : {threshold:.10f}\n")
     print(f"[KAYIT] {report_path}")
 
+    # Gorseller
     plot_confusion_matrix(cm, OUTPUT_DIR)
     plot_score_histogram(scores, threshold, y_true, OUTPUT_DIR)
     if roc is not None:
