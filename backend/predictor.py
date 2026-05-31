@@ -44,13 +44,13 @@ MODEL_REGISTRY = {
         "model_file":     "autoencoder.keras",
         "threshold_file": "threshold.txt",
         "loader":         "keras",
-        "score_mode":     "reconstruction",   # error > threshold → anomaly
+        "score_mode":     "reconstruction",
     },
     "isolation_forest": {
         "model_file":     "isolation_forest.pkl",
         "threshold_file": "if_threshold.txt",
         "loader":         "joblib",
-        "score_mode":     "decision",         # score < threshold → anomaly
+        "score_mode":     "decision",
     },
     "ocsvm": {
         "model_file":     "ocsvm.pkl",
@@ -69,10 +69,10 @@ MODEL_REGISTRY = {
 # Bellek cache — her model_type icin ayri slot
 _cache: dict = {}
 
-extractor = SourceFileLoader(
-    "extractor",
-    str(ML_DIR / "01_extract_features.py"),
-).load_module()
+import types
+_loader = SourceFileLoader("extractor", str(ML_DIR / "01_extract_features.py"))
+extractor = types.ModuleType("extractor")
+_loader.exec_module(extractor)
 
 
 # ── Yardimci ─────────────────────────────────────────────────────────────────
@@ -135,21 +135,14 @@ def load_artifacts(model_type: str = DEFAULT_MODEL_TYPE):
 
 # ── Skor Hesapla ──────────────────────────────────────────────────────────────
 def compute_scores(model, X_scaled: np.ndarray, score_mode: str) -> np.ndarray:
-    """Her model tipi icin anomali skoru uretir.
-    Dondurulen skor: buyuk deger = daha fazla anomali."""
     if score_mode == "reconstruction":
-        # Autoencoder veya PCA
         if hasattr(model, "predict"):
-            # Keras model
             reconstructed = model.predict(X_scaled, verbose=0)
         else:
-            # PCA (sklearn)
             X_reduced     = model.transform(X_scaled)
             reconstructed = model.inverse_transform(X_reduced)
         return np.mean(np.square(X_scaled - reconstructed), axis=1)
-    else:
-        # decision_function: yuksek = normal → tersini al → yuksek = anomali
-        return -model.decision_function(X_scaled)
+    return -model.decision_function(X_scaled)
 
 
 # ── API: Model Bilgisi ────────────────────────────────────────────────────────

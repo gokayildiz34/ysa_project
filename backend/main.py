@@ -1,7 +1,7 @@
 
 import json
-import os
 import shutil
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
@@ -14,6 +14,7 @@ from backend.predictor import (
     DEFAULT_ANOMALY_RATIO_THRESHOLD,
     DEFAULT_MODEL_TYPE,
     DEFAULT_WINDOW_SIZE,
+    MODEL_REGISTRY,
     BASE_DIR,
     analyze_pcap,
     get_available_models,
@@ -25,7 +26,16 @@ UPLOAD_DIR         = BASE_DIR / "data" / "uploads"
 REALISTIC_TEST_DIR = BASE_DIR / "data" / "raw" / "realistic_test"
 FRONTEND_DIR       = BASE_DIR / "frontend"
 
-app = FastAPI(title="NetAnomAI API", version="2.0.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    REALISTIC_TEST_DIR.mkdir(parents=True, exist_ok=True)
+    yield
+
+
+app = FastAPI(title="NetAnomAI API", version="2.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,11 +46,6 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-def on_startup():
-    init_db()
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-    REALISTIC_TEST_DIR.mkdir(parents=True, exist_ok=True)
 
 
 if FRONTEND_DIR.exists():
@@ -94,19 +99,15 @@ def model_comparison():
         raise HTTPException(status_code=500, detail=str(exc))
 
 
-
 @app.get("/api/model-metrics/{model_name}")
 def model_metrics(model_name: str):
-    """outputs/{model_name}/metrics.json icerigini dondurur."""
-    allowed = {"isolation_forest", "ocsvm", "pca"}
-    if model_name not in allowed:
+    if model_name not in MODEL_REGISTRY:
         raise HTTPException(status_code=404, detail=f"Model bulunamadi: {model_name}")
     metrics_path = BASE_DIR / "outputs" / model_name / "metrics.json"
     if not metrics_path.exists():
         raise HTTPException(
             status_code=404,
-            detail=f"outputs/{model_name}/metrics.json bulunamadi. "
-                   f"Once python -m ml.04c/04d/04e_evaluate_* calistirin."
+            detail=f"outputs/{model_name}/metrics.json bulunamadi."
         )
     with open(metrics_path, encoding="utf-8") as f:
         return json.load(f)
